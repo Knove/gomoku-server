@@ -1,0 +1,37 @@
+/**
+ * @Desc: Reponse
+ * @Author: Knove
+ * @createTime: 2019/11/7 23:18
+ * @Email: knove@qq.com
+ */
+
+package models
+
+/*
+Response 通用返回数据格式
+
+*/
+type Response struct {
+	TraceID  string      `json:"traceId"`        // 消息的唯一追踪Id
+	InfoType string      `json:"infoType"`       // 消息类型
+	Data     interface{} `json:"data,omitempty"` // 数据 json
+}
+
+/*
+Data 通用返回数据格式
+
+*/
+type Data struct {
+	Code uint64      `json:"code"` // code 值
+	Msg  string      `json:"msg"`  // 消息
+	Data interface{} `json:"data"` // 数据 json
+}
+
+/*
+NewResponse 创建返回数据实例
+
+*/
+func NewResponse(traceID string, infoType string, data interface{}, msg string, code uint64) *Response {
+	backData := Data{Code: code, Msg: msg, Data: data}
+	return &Response{TraceID: traceID, InfoType: infoType, Data: backData}
+}

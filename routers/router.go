@@ -9,6 +9,8 @@ package routers
 
 import (
 	"server/controllers"
+	"server/models"
+	"server/services"
 
 	"github.com/astaxie/beego"
 )
@@ -23,6 +25,7 @@ func init() {
 	// 	),
 	// )
 	// beego.AddNamespace(ns)
+	beego.Router("/ws", &controllers.WebsocketController{})
 
-	beego.Router("/gomoku", &controllers.GomokuController{})
+	models.Register("gomoku", &services.Gomoku{})
 }
