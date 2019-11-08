@@ -10,10 +10,18 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+/*
+WebsocketController .
+
+*/
 type WebsocketController struct {
 	beego.Controller
 }
 
+/*
+Get 简历链接
+
+*/
 func (c *WebsocketController) Get() {
 	ws, err := websocket.Upgrade(c.Ctx.ResponseWriter, c.Ctx.Request, nil, 1024, 1024)
 	if _, ok := err.(websocket.HandshakeError); ok {
