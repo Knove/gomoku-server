@@ -1,10 +1,10 @@
-// @APIVersion 1.0.0
-// @Title beego Test API
-// @Description beego has a very cool tools to autogenerate documents for your API
-// @Contact astaxie@gmail.com
-// @TermsOfServiceUrl http://beego.me/
-// @License Apache 2.0
-// @LicenseUrl http://www.apache.org/licenses/LICENSE-2.0.html
+/**
+ * @Desc: Router
+ * @Author: Knove
+ * @createTime: 2019/11/8 18:04
+ * @Email: knove@qq.com
+ */
+
 package routers
 
 import (
@@ -16,15 +16,9 @@ import (
 )
 
 func init() {
-	// ns := beego.NewNamespace("/base",
 
-	// 	beego.NSNamespace("/users",
-	// 		beego.NSInclude(
-	// 			&controllers.UsersController{},
-	// 		),
-	// 	),
-	// )
-	// beego.AddNamespace(ns)
+	// websocket Router and Register
+
 	beego.Router("/ws", &controllers.WebsocketController{})
 
 	models.Register("gomoku", &services.Gomoku{})

@@ -3,7 +3,6 @@ package controllers
 import (
 	"net/http"
 	"server/models"
-	"strconv"
 	"time"
 
 	"github.com/astaxie/beego"
@@ -11,7 +10,7 @@ import (
 )
 
 /*
-WebsocketController .
+WebsocketController websocket
 
 */
 type WebsocketController struct {
@@ -19,7 +18,7 @@ type WebsocketController struct {
 }
 
 /*
-Get 简历链接
+Get 建立链接
 
 */
 func (c *WebsocketController) Get() {
@@ -42,9 +41,9 @@ func (c *WebsocketController) Get() {
 
 	models.ClientManagerHandler.Register <- client
 
-	for index := 0; index < 15; index++ {
-		time.Sleep(time.Duration(1) * time.Second)
-		client.SendMsg([]byte(strconv.Itoa(index)))
-	}
+	// for index := 0; index < 15; index++ {
+	// 	time.Sleep(time.Duration(1) * time.Second)
+	// 	client.SendMsg([]byte(strconv.Itoa(index)))
+	// }
 
 }
