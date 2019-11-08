@@ -12,7 +12,10 @@ const (
 	heartbeatExpirationTime = 6 * 60
 )
 
-// 用户连接
+/*
+Client 客户端 链接
+
+*/
 type Client struct {
 	Addr          string          // 客户端地址
 	Socket        *websocket.Conn // 用户连接
@@ -23,7 +26,10 @@ type Client struct {
 	LoginTime     uint64          // 登录时间 登录以后才有
 }
 
-// 初始化
+/*
+NewClient 创建一个链接
+
+*/
 func NewClient(addr string, socket *websocket.Conn, firstTime uint64) (client *Client) {
 	client = &Client{
 		Addr:          addr,
@@ -36,7 +42,10 @@ func NewClient(addr string, socket *websocket.Conn, firstTime uint64) (client *C
 	return
 }
 
-// 读取客户端数据
+/*
+Read 读数据
+
+*/
 func (client *Client) Read() {
 	defer func() {
 		if r := recover(); r != nil {
@@ -63,7 +72,10 @@ func (client *Client) Read() {
 	}
 }
 
-// 向客户端写数据
+/*
+Write 写数据
+
+*/
 func (client *Client) Write() {
 	defer func() {
 		if r := recover(); r != nil {
@@ -93,7 +105,10 @@ func (client *Client) Write() {
 	}
 }
 
-// 发送数据
+/*
+SendMsg 发送数据
+
+*/
 func (client *Client) SendMsg(msg []byte) {
 
 	if client == nil {
@@ -110,7 +125,10 @@ func (client *Client) SendMsg(msg []byte) {
 	client.Send <- msg
 }
 
-// 读取客户端数据
+/*
+Close 关闭链接
+
+*/
 func (client *Client) Close() {
 	close(client.Send)
 }
