@@ -9,7 +9,9 @@ import (
 )
 
 var (
-	routers = make(map[string]interface{})
+	// ClientManagerHandler websocket 管理
+	ClientManagerHandler = NewClientManager()
+	routers              = make(map[string]interface{})
 )
 
 /*

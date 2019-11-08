@@ -49,7 +49,7 @@ Read 读数据
 func (client *Client) Read() {
 	defer func() {
 		if r := recover(); r != nil {
-			fmt.Println("write stop", string(debug.Stack()), r)
+			fmt.Println("read stop", string(debug.Stack()), r)
 		}
 	}()
 
@@ -85,7 +85,7 @@ func (client *Client) Write() {
 	}()
 
 	defer func() {
-		// clientManager.Unregister <- c
+		ClientManagerHandler.Unregister <- client
 		client.Socket.Close()
 		fmt.Println("Client发送数据 defer", client)
 	}()

@@ -6,6 +6,8 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql"
+
+	"server/models"
 )
 
 func main() {
@@ -15,5 +17,10 @@ func main() {
 		beego.BConfig.WebConfig.DirectoryIndex = true
 		beego.BConfig.WebConfig.StaticDir["/swagger"] = "swagger"
 	}
+	initSocket()
 	beego.Run()
+}
+
+func initSocket() {
+	go models.ClientManagerHandler.Start()
 }

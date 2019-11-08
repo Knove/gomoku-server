@@ -32,8 +32,11 @@ func (c *WebsocketController) Get() {
 	go client.Read()
 	go client.Write()
 
+	models.ClientManagerHandler.Register <- client
+
 	for index := 0; index < 15; index++ {
 		time.Sleep(time.Duration(1) * time.Second)
 		client.SendMsg([]byte(strconv.Itoa(index)))
 	}
+
 }
