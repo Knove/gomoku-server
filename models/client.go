@@ -13,6 +13,25 @@ const (
 )
 
 /*
+UserClient 用户信息
+
+*/
+type UserClient struct {
+	UserID string
+	Client *Client
+}
+
+/*
+GetKey 获取用户的 key
+
+*/
+func (l *UserClient) GetKey() (key string) {
+	key = l.UserID
+
+	return
+}
+
+/*
 Client 客户端 链接
 
 */
@@ -131,4 +150,25 @@ Close 关闭链接
 */
 func (client *Client) Close() {
 	close(client.Send)
+}
+
+/*
+Login 登录
+
+*/
+func (client *Client) Login(userID string, loginTime uint64) {
+	client.UserID = userID
+	client.LoginTime = loginTime
+	// 心跳
+	client.Heartbeat(loginTime)
+}
+
+/*
+Heartbeat 心跳
+
+*/
+func (client *Client) Heartbeat(currentTime uint64) {
+	client.HeartbeatTime = currentTime
+
+	return
 }

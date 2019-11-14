@@ -60,8 +60,6 @@ func ProcessData(client *Client, message []byte) {
 	// 请求方法
 	getType := dataMap["getType"]
 
-	beego.Error(traceID, infoType, getType)
-
 	var (
 		code uint64
 		msg  string

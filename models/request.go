@@ -15,4 +15,5 @@ type Request struct {
 	TraceID  string      `json:"traceID"`        // 消息的唯一追踪Id
 	InfoType string      `json:"infoType"`       // 消息类型
 	Data     interface{} `json:"data,omitempty"` // 数据 json
+	UserID   string      `json:"userID,omitempty"`
 }
