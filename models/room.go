@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"server/common"
 	"sync"
 
 	"github.com/astaxie/beego"
@@ -66,7 +67,13 @@ func (room *Room) EventRegister(userClient *UserClient) {
 		key := userClient.GetKey()
 		room.AddClients(key, client)
 	}
-	room.sendAll("加入了房间！", client)
+	backData := &RoomSay{
+		Type:    "JoinRoom",
+		UserID:  userClient.UserID,
+		Content: userClient.UserID + "加入了房间",
+	}
+	msgByte := DataHandle(common.OK, backData, userClient.Request)
+	room.sendAll(msgByte, client)
 	beego.Info("EventRegister 用户加入房间", client.Addr)
 
 }
@@ -141,13 +148,13 @@ func (room *Room) GetUserClients() (clients []*Client) {
 sendAll 房间内聊天广播
 
 */
-func (room *Room) sendAll(data string, client *Client) {
-	beego.Info("全员广播", client.UserID, data)
+func (room *Room) sendAll(msg []byte, client *Client) {
+	beego.Info("全员广播", client.UserID, msg)
 
 	clients := room.GetUserClients()
 	for _, conn := range clients {
 		if conn != client {
-			conn.SendMsg([]byte(data))
+			conn.SendMsg(msg)
 		}
 	}
 }

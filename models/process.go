@@ -62,7 +62,6 @@ func ProcessData(client *Client, message []byte) {
 
 	var (
 		code uint64
-		msg  string
 		data interface{}
 	)
 
@@ -73,10 +72,9 @@ func ProcessData(client *Client, message []byte) {
 		ret := immutable.MethodByName(getType)
 		// service 中是否存在方法
 		if ret.IsValid() {
-			reflectArray := ret.Call([]reflect.Value{reflect.ValueOf(client), reflect.ValueOf(traceID), reflect.ValueOf(requestData)})
+			reflectArray := ret.Call([]reflect.Value{reflect.ValueOf(client), reflect.ValueOf(request), reflect.ValueOf(requestData)})
 			code = reflectArray[0].Uint()
-			msg = reflectArray[1].String()
-			data = reflectArray[2].Interface()
+			data = reflectArray[1].Interface()
 		} else {
 			code = common.ParameterIllegal
 			beego.Error("路由中方法不存在", client.Addr, "infoType:", infoType)
@@ -86,9 +84,22 @@ func ProcessData(client *Client, message []byte) {
 		beego.Error("路由不存在", client.Addr, "infoType:", infoType)
 	}
 
-	msg = common.GetErrorMessage(code, msg)
+	sendByte := DataHandle(code, data, request)
 
-	response := NewResponse(traceID, infoType, data, msg, code)
+	client.SendMsg(sendByte)
+
+	beego.Info("Response send", client.Addr, "traceID", traceID, "code", code)
+
+	return
+}
+
+/*
+DataHandle 数据处理
+
+*/
+func DataHandle(code uint64, data interface{}, request *Request) (backInfo []byte) {
+	msg := common.GetErrorMessage(code, "")
+	response := NewResponse(request.TraceID, request.InfoType, data, msg, code)
 
 	sendByte, err := json.Marshal(response)
 	if err != nil {
@@ -97,10 +108,7 @@ func ProcessData(client *Client, message []byte) {
 		return
 	}
 
-	client.SendMsg(sendByte)
-
-	beego.Info("Response send", client.Addr, "traceID", traceID, "code", code)
-
+	backInfo = sendByte
 	return
 }
 
