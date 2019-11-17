@@ -67,13 +67,22 @@ func (gomoku *Gomoku) Join(client *models.Client, request *models.Request, messa
 
 	if models.ClientManagerHandler.InRoom(roomName) {
 		room := models.ClientManagerHandler.Rooms[roomName]
-		room.Register <- userClient
-		beego.Info("webSocket 用户加入房间", traceID, "userID", userID, "RoomName", roomName, "BackType", 1)
-		backData.BackType = 1
+
+		userNum := len(room.Users)
+		if userNum >= 2 {
+			beego.Info("webSocket 用户加入房间 失败 人满", traceID, "userID", userID, "RoomName", roomName, "BackType", 1)
+			backData.BackType = -1
+		} else {
+			userClient.Client.RoomName = roomName
+			room.Register <- userClient
+			beego.Info("webSocket 用户加入房间", traceID, "userID", userID, "RoomName", roomName, "BackType", 1)
+			backData.BackType = 1
+		}
 	} else {
-		room := models.NewRoom(roomName)
+		room := models.NewRoom(roomName, "gomoku")
 		go room.Start()
 
+		userClient.Client.RoomName = roomName
 		room.Register <- userClient
 		models.ClientManagerHandler.AddRoom <- room
 		beego.Info("webSocket 用户创建并加入房间", traceID, "userID", userID, "RoomName", roomName, "BackType", 0)
@@ -84,3 +93,8 @@ func (gomoku *Gomoku) Join(client *models.Client, request *models.Request, messa
 
 	return
 }
+
+/*
+Leave 离开某个房间
+
+*/

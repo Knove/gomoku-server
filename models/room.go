@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"server/common"
 	"sync"
 
@@ -14,10 +13,12 @@ Room 房间
 */
 type Room struct {
 	Name       string             // 房间号
+	RoomType   string             // 房间类型 gomoku
 	Users      map[string]*Client // 登录的用户
 	UserLock   sync.RWMutex       // 读写锁
 	Register   chan *UserClient   // 连接连接处理
 	Unregister chan *Client       // 断开连接处理程序
+	Exit       chan *Client       // 关闭房间
 	Broadcast  chan []byte        // 广播 向全部成员发送数据
 }
 
@@ -25,12 +26,14 @@ type Room struct {
 NewRoom 新建客户端管理实例
 
 */
-func NewRoom(name string) (room *Room) {
+func NewRoom(name string, roomType string) (room *Room) {
 	room = &Room{
 		Name:       name,
+		RoomType:   roomType,
 		Users:      make(map[string]*Client),
 		Register:   make(chan *UserClient, 1000),
 		Unregister: make(chan *Client, 1000),
+		Exit:       make(chan *Client, 1000),
 		Broadcast:  make(chan []byte, 1000),
 	}
 
@@ -52,6 +55,10 @@ func (room *Room) Start() {
 			// 离开房间事件
 			room.EventUnregister(conn)
 
+		case conn := <-room.Exit:
+			// 离开房间事件
+			beego.Info("EventRegister 房间关闭", "用户房间名：", conn.RoomName, "真实房间名", room.Name)
+			return
 		}
 	}
 }
@@ -66,16 +73,17 @@ func (room *Room) EventRegister(userClient *UserClient) {
 	if ClientManagerHandler.InClient(client) {
 		key := userClient.GetKey()
 		room.AddClients(key, client)
+		backData := &RoomSay{
+			Type:    "JoinRoom",
+			UserID:  userClient.UserID,
+			Content: userClient.UserID + "加入了房间",
+		}
+		msgByte := DataHandle(common.OK, backData, userClient.Request)
+		room.sendAll(msgByte, client)
+		beego.Info("EventRegister 用户加入房间", client.Addr)
+	} else {
+		beego.Info("EventRegister 用户加入房间失败，没有此连接", client.Addr)
 	}
-	backData := &RoomSay{
-		Type:    "JoinRoom",
-		UserID:  userClient.UserID,
-		Content: userClient.UserID + "加入了房间",
-	}
-	msgByte := DataHandle(common.OK, backData, userClient.Request)
-	room.sendAll(msgByte, client)
-	beego.Info("EventRegister 用户加入房间", client.Addr)
-
 }
 
 /*
@@ -86,7 +94,20 @@ func (room *Room) EventUnregister(client *Client) {
 
 	room.DelClients(client.UserID)
 
-	fmt.Println("EventUnregister 用户离开房间", client.Addr)
+	// 给房间内另外的人广播有人离开事件
+	backData := &RoomSay{
+		Type:    "LeaveRoom",
+		UserID:  client.UserID,
+		Content: client.UserID + "离开了房间",
+	}
+	request := &Request{
+		TraceID:  "",            // 此为自发回调，没有此 TraceID
+		InfoType: room.RoomType, // 这种情况 InfoType 等于 房间类型 Type
+	}
+
+	msgByte := DataHandle(common.OK, backData, request)
+	room.sendAll(msgByte, client)
+	beego.Info("EventUnregister 用户离开房间", client.Addr)
 }
 
 /*

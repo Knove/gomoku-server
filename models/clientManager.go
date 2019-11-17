@@ -104,7 +104,22 @@ DelClients 删除客户端
 func (clientManager *ClientManager) DelClients(client *Client) {
 	clientManager.ClientsLock.Lock()
 	defer clientManager.ClientsLock.Unlock()
+	// 房间退出 或清理房间
+	if room, ok := clientManager.Rooms[client.RoomName]; ok {
+		// 保证房间内确实有这个人
+		if _, ok := room.Users[client.UserID]; ok {
+			if len(room.Users) == 1 {
+				// 直接删除房间
+				delete(clientManager.Rooms, client.RoomName)
+				room.Exit <- client
+			} else {
+				room.Unregister <- client
+			}
 
+		}
+
+	}
+	// 在总管理中卸载
 	if _, ok := clientManager.Clients[client]; ok {
 		delete(clientManager.Clients, client)
 	}

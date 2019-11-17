@@ -41,6 +41,7 @@ type Client struct {
 	Socket        *websocket.Conn // 用户连接
 	Send          chan []byte     // 待发送的数据
 	UserID        string          // 用户Id，用户登录以后才有
+	RoomName      string          // 房间名，加入房间才有
 	FirstTime     uint64          // 首次连接事件
 	HeartbeatTime uint64          // 用户上次心跳时间
 	LoginTime     uint64          // 登录时间 登录以后才有
@@ -106,6 +107,7 @@ func (client *Client) Write() {
 
 	defer func() {
 		ClientManagerHandler.Unregister <- client
+
 		client.Socket.Close()
 		beego.Info("Client发送数据 defer", client)
 	}()
