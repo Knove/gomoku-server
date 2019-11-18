@@ -8,14 +8,25 @@
 package models
 
 /*
-Join 返回格式
+Join 加入 返回格式
 
 */
 type Join struct {
 	Type     string `json:"type"`     // 返回类型 Join
 	UserID   string `json:"userID"`   // 用户ID
 	RoomName string `json:"roomName"` // 房间名
-	BackType int32  `json:"backType"` // 返回类型 0 创建房间并加入 1 加入已经存在的房间
+	BackType int32  `json:"backType"` // 返回类型 -1 房间人满2人 0 创建房间并加入 1 加入已经存在的房间
+}
+
+/*
+Leave 离开 返回格式
+
+*/
+type Leave struct {
+	Type     string `json:"type"`     // 返回类型 Leave
+	UserID   string `json:"userID"`   // 用户ID
+	RoomName string `json:"roomName"` // 房间名
+	BackType int32  `json:"backType"` // 返回类型 -1 失败，房间不存在 -2 用户未登录 0 离开房间
 }
 
 /*

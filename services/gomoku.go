@@ -37,7 +37,6 @@ Join 加入指定房间号
 func (gomoku *Gomoku) Join(client *models.Client, request *models.Request, message []byte) (code uint32, data interface{}) {
 
 	code = common.OK
-	currentTime := uint64(time.Now().Unix())
 
 	traceID := request.TraceID
 	userID := request.UserID
@@ -55,6 +54,7 @@ func (gomoku *Gomoku) Join(client *models.Client, request *models.Request, messa
 	roomName := dataMap["roomName"]
 
 	// 信息封装
+	currentTime := uint64(time.Now().Unix())
 	client.Login(userID, currentTime)
 
 	userClient := &models.UserClient{
@@ -98,3 +98,55 @@ func (gomoku *Gomoku) Join(client *models.Client, request *models.Request, messa
 Leave 离开某个房间
 
 */
+func (gomoku *Gomoku) Leave(client *models.Client, request *models.Request, message []byte) (code uint32, data interface{}) {
+	code = common.OK
+
+	traceID := request.TraceID
+	userID := client.UserID
+
+	// 返回数据
+	backData := &models.Leave{
+		Type:   "Leave",
+		UserID: userID,
+	}
+
+	if userID == "" {
+		backData.BackType = -2
+		beego.Info("webSocket request Leave 接口 => 用户未登录", traceID)
+		return
+	}
+
+	beego.Info("webSocket request Leave 接口 =>", client.Addr, traceID, message)
+
+	dataMap := make(map[string]string)
+	if err := json.Unmarshal(message, &dataMap); err != nil {
+		code = common.ParameterIllegal
+		beego.Error("解析数据失败", traceID, err)
+
+		return
+	}
+
+	roomName := dataMap["roomName"]
+
+	// 判断是否还是存在此房间号
+	if models.ClientManagerHandler.InRoom(roomName) {
+		room := models.ClientManagerHandler.Rooms[roomName]
+		// 保证房间内确实有这个人
+		if _, ok := room.Users[userID]; ok {
+			if len(room.Users) == 1 {
+				// 直接删除房间
+				delete(models.ClientManagerHandler.Rooms, roomName)
+				room.Exit <- client
+			} else {
+				room.Unregister <- client
+			}
+			backData.BackType = 0
+		}
+	} else {
+		backData.BackType = -1
+	}
+
+	data = backData
+
+	return
+}
