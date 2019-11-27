@@ -146,6 +146,76 @@ func (gomoku *Gomoku) Leave(client *models.Client, request *models.Request, mess
 		backData.BackType = -1
 	}
 
+	backData.RoomName = roomName
+
+	data = backData
+
+	return
+}
+
+/*
+Say 房间内说话
+
+*/
+func (gomoku *Gomoku) Say(client *models.Client, request *models.Request, message []byte) (code uint32, data interface{}) {
+	code = common.OK
+
+	traceID := request.TraceID
+	userID := client.UserID
+
+	// 返回数据
+	backData := &models.Say{
+		Type:   "Say",
+		UserID: userID,
+	}
+
+	if userID == "" {
+		backData.BackType = -2
+		beego.Info("webSocket request Say 接口 => 用户未登录", traceID)
+		return
+	}
+
+	beego.Info("webSocket request Say 接口 =>", client.Addr, traceID, message)
+
+	dataMap := make(map[string]string)
+	if err := json.Unmarshal(message, &dataMap); err != nil {
+		code = common.ParameterIllegal
+		beego.Error("解析数据失败", traceID, err)
+
+		return
+	}
+
+	roomName := dataMap["roomName"]
+	content := dataMap["content"]
+
+	// 判断是否还是存在此房间号
+	if models.ClientManagerHandler.InRoom(roomName) {
+		room := models.ClientManagerHandler.Rooms[roomName]
+		// 保证房间内确实有这个人
+		if _, ok := room.Users[userID]; ok {
+			// 给房间内另外的人广播聊天
+			backMsgData := &models.RoomSay{
+				Type:    "SayRoom",
+				UserID:  client.UserID,
+				Content: content,
+			}
+			request := &models.Request{
+				TraceID:  "",            // 此为自发回调，没有此 TraceID
+				InfoType: room.RoomType, // 这种情况 InfoType 等于 房间类型 Type
+			}
+
+			msgByte := models.DataHandle(common.OK, backMsgData, request)
+
+			room.SendAll(msgByte, client)
+			backData.BackType = 0
+		} else {
+			backData.BackType = -1
+		}
+	} else {
+		backData.BackType = -1
+	}
+
+	backData.RoomName = roomName
 	data = backData
 
 	return

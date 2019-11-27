@@ -30,11 +30,22 @@ type Leave struct {
 }
 
 /*
+Say 房间内讲话 返回格式
+
+*/
+type Say struct {
+	Type     string `json:"type"`     // 返回类型 Say
+	UserID   string `json:"userID"`   // 用户ID
+	RoomName string `json:"roomName"` // 房间名
+	BackType int32  `json:"backType"` // 返回类型 -1 失败 -2 用户未登录 0 成功
+}
+
+/*
 RoomSay 在房间内的广播
 
 */
 type RoomSay struct {
-	Type    string `json:"type"`    // 返回类型 Say 聊天 JoinRoom 加入房间 LeaveRoom 离开房间
+	Type    string `json:"type"`    // 返回类型 SayRoom 聊天 JoinRoom 加入房间 LeaveRoom 离开房间
 	UserID  string `json:"userID"`  // 用户ID
 	Content string `json:"content"` // 说的话
 }

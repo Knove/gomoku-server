@@ -79,7 +79,7 @@ func (room *Room) EventRegister(userClient *UserClient) {
 			Content: userClient.UserID + "加入了房间",
 		}
 		msgByte := DataHandle(common.OK, backData, userClient.Request)
-		room.sendAll(msgByte, client)
+		room.SendAll(msgByte, client)
 		beego.Info("EventRegister 用户加入房间", client.Addr)
 	} else {
 		beego.Info("EventRegister 用户加入房间失败，没有此连接", client.Addr)
@@ -106,7 +106,7 @@ func (room *Room) EventUnregister(client *Client) {
 	}
 
 	msgByte := DataHandle(common.OK, backData, request)
-	room.sendAll(msgByte, client)
+	room.SendAll(msgByte, client)
 	beego.Info("EventUnregister 用户离开房间", client.Addr)
 }
 
@@ -166,10 +166,10 @@ func (room *Room) GetUserClients() (clients []*Client) {
 }
 
 /*
-sendAll 房间内聊天广播
+SendAll 房间内聊天广播
 
 */
-func (room *Room) sendAll(msg []byte, client *Client) {
+func (room *Room) SendAll(msg []byte, client *Client) {
 	beego.Info("全员广播", client.UserID, msg)
 
 	clients := room.GetUserClients()
