@@ -3,6 +3,6 @@ FROM golang:latest
 WORKDIR /go/src/app
 COPY . .
 
-RUN chmod 777 /go/src/app/server
+RUN chmod 777 /go/src/app/main
 
-ENTRYPOINT ["./server"]
+ENTRYPOINT ["./main"]

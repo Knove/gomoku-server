@@ -16,6 +16,7 @@ func main() {
 	// 	beego.BConfig.WebConfig.DirectoryIndex = true
 	// 	beego.BConfig.WebConfig.StaticDir["/swagger"] = "swagger"
 	// }
+	beego.Info("Knove's Hacker World")
 	initSocket()
 	beego.Run()
 }
