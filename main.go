@@ -1,23 +1,28 @@
 package main
 
 import (
+	"os"
 	_ "server/routers"
 
 	"github.com/astaxie/beego"
-	_ "github.com/go-sql-driver/mysql"
 
+	"server/common"
 	"server/models"
 )
 
 func main() {
-	// orm.RegisterDataBase("default", "mysql", beego.AppConfig.String("sqlconn"))
-	// orm.Debug = true
-	// if beego.BConfig.RunMode == "dev" {
-	// 	beego.BConfig.WebConfig.DirectoryIndex = true
-	// 	beego.BConfig.WebConfig.StaticDir["/swagger"] = "swagger"
-	// }
 	beego.Info("Knove's Hacker World")
+
+	// INIT WEBSOCKET
 	initSocket()
+
+	// INIT GORM
+	flag := common.GetInstance().Init()
+	if !flag {
+		beego.Error("init database failure...")
+		os.Exit(1)
+	}
+
 	beego.Run()
 }
 

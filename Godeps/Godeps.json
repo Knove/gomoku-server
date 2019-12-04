@@ -64,6 +64,21 @@
 			"Rev": "c3e18be99d19e6b3e8f1559eea2c161a665c4b6b"
 		},
 		{
+			"ImportPath": "github.com/jinzhu/gorm",
+			"Comment": "v1.9.11-21-g5940839",
+			"Rev": "59408390c2dce9ca8b48fae08937213e72b24f9a"
+		},
+		{
+			"ImportPath": "github.com/jinzhu/gorm/dialects/mysql",
+			"Comment": "v1.9.11-21-g5940839",
+			"Rev": "59408390c2dce9ca8b48fae08937213e72b24f9a"
+		},
+		{
+			"ImportPath": "github.com/jinzhu/inflection",
+			"Comment": "v1.0.0",
+			"Rev": "f5c5f50e6090ae76a29240b61ae2a90dd810112e"
+		},
+		{
 			"ImportPath": "github.com/shiena/ansicolor",
 			"Rev": "a422bbe96644373c5753384a59d678f7d261ff10"
 		},
@@ -74,6 +89,30 @@
 		{
 			"ImportPath": "golang.org/x/crypto/acme/autocert",
 			"Rev": "f4817d981bb690635456c5c1c6aa0585e5d45891"
+		},
+		{
+			"ImportPath": "golang.org/x/net/idna",
+			"Rev": "d66e71096ffb9f08f36d9aefcae80ce319de6d68"
+		},
+		{
+			"ImportPath": "golang.org/x/text/secure/bidirule",
+			"Comment": "v0.3.2-3-g4b67af8",
+			"Rev": "4b67af870c6ffd08258ef1202f371aebccaf7b68"
+		},
+		{
+			"ImportPath": "golang.org/x/text/transform",
+			"Comment": "v0.3.2-3-g4b67af8",
+			"Rev": "4b67af870c6ffd08258ef1202f371aebccaf7b68"
+		},
+		{
+			"ImportPath": "golang.org/x/text/unicode/bidi",
+			"Comment": "v0.3.2-3-g4b67af8",
+			"Rev": "4b67af870c6ffd08258ef1202f371aebccaf7b68"
+		},
+		{
+			"ImportPath": "golang.org/x/text/unicode/norm",
+			"Comment": "v0.3.2-3-g4b67af8",
+			"Rev": "4b67af870c6ffd08258ef1202f371aebccaf7b68"
 		},
 		{
 			"ImportPath": "gopkg.in/yaml.v2",

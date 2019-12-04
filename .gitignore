@@ -14,3 +14,7 @@
 # Dependency directories (remove the comment below to include it)
 vendor/
 *.tmp
+commentsRouter_controllers.go
+
+# Project prod conf file
+conf.prod.yaml
