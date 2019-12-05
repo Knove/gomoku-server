@@ -11,16 +11,10 @@ type UsersController struct {
 
 // URLMapping ...
 func (c *UsersController) URLMapping() {
-	c.Mapping("Post", c.Post)
+	c.Mapping("getAllUser", c.getAllUser)
 }
 
-// Post ...
-// @Title Post
-// @Description create Users
-// @Param	body		body 	models.Users	true		"body for Users content"
-// @Success 201 {int} models.Users
-// @Failure 403 body is empty
-// @router / [post]
-func (c *UsersController) Post() {
-
+// @router /getAllUser [post]
+func (c *UsersController) getAllUser() {
+	beego.Info("hello")
 }

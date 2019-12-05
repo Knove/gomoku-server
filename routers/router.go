@@ -18,7 +18,7 @@ import (
 func init() {
 
 	// websocket Router and Register
-
+	beego.Router("/user", &controllers.UsersController{})
 	beego.Router("/ws", &controllers.WebsocketController{})
 
 	models.Register("gomoku", &services.Gomoku{})
