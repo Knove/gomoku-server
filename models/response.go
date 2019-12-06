@@ -28,10 +28,19 @@ type Data struct {
 }
 
 /*
-NewResponse 创建返回数据实例
+NewResponse 创建 websocket 返回数据实例
 
 */
 func NewResponse(traceID string, infoType string, data interface{}, msg string, code uint64) *Response {
 	backData := Data{Code: code, Msg: msg, Data: data}
 	return &Response{TraceID: traceID, InfoType: infoType, Data: backData}
+}
+
+/*
+NewAPIResponse 创建标准接口实例
+
+*/
+func NewAPIResponse(data interface{}, msg string, code uint64) *Data {
+	backData := Data{Code: code, Msg: msg, Data: data}
+	return &backData
 }
