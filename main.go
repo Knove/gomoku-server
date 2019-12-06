@@ -5,7 +5,6 @@ import (
 	"server/common"
 	"server/models"
 	"server/routers"
-	_ "server/routers"
 
 	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
@@ -16,14 +15,14 @@ func main() {
 	log.Printf("Knove's Hacker World")
 
 	// INIT LOGRUS
-
 	log.SetFormatter(&log.TextFormatter{})
 	logrus.SetOutput(os.Stdout)
 	logrus.SetLevel(logrus.DebugLevel)
+	log.Printf("Init Logrus ...")
 
 	// INIT WEBSOCKET
 	initSocket()
-	log.Printf("InitSocket ...")
+	log.Printf("Init Socket ...")
 
 	// INIT GORM
 	flag := common.GetInstance().Init()
@@ -31,7 +30,7 @@ func main() {
 		log.Error("init database failure...")
 		os.Exit(1)
 	}
-	log.Printf("INIT GORM ...")
+	log.Printf("INIT Gorm ...")
 
 	// INIT ROUTER
 	routers.Init()
