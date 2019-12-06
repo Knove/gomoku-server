@@ -18,3 +18,4 @@ go.sum
 
 # Project prod conf file
 conf.prod.yaml
+server
