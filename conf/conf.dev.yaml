@@ -1,4 +1,4 @@
 host: localhost:3306
-user: knove
+user: root
 pwd: 123456
-dbname: tablename
+dbname: go_server

@@ -11,6 +11,7 @@ import (
 )
 
 func main() {
+
 	beego.Info("Knove's Hacker World")
 
 	// INIT WEBSOCKET

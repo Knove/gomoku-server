@@ -16,8 +16,12 @@ import (
 )
 
 func init() {
-	// api Router
-	beego.Include(&controllers.UsersController{})
+	/* api Router */
+
+	// user
+	beego.Router("/user/getAllUser", &controllers.UsersController{}, "*:GetAllUser")
+
+	/* websocket */
 
 	// websocket Router and Register
 	beego.Router("/ws", &controllers.WebsocketController{})

@@ -23,7 +23,7 @@ GetConf 获取配置文件
 
 */
 func (c *Conf) GetConf() *Conf {
-	yamlFile, err := ioutil.ReadFile("conf/conf.prod.yaml")
+	yamlFile, err := ioutil.ReadFile("conf/conf.dev.yaml")
 	if err != nil {
 		fmt.Println(err.Error())
 	}
