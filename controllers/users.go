@@ -5,10 +5,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// UsersController operations for Users
-type UsersController struct {
-}
-
 /*
 GetAllUser 获取全部用户数据
 

@@ -1,17 +1,18 @@
 package controllers
 
 import (
-	log "github.com/sirupsen/logrus"
 	"net/http"
 	"server/models"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 )
 
 /*
-Get 建立链接
+Websocket 建立链接
 
 */
 func Websocket(c *gin.Context) {

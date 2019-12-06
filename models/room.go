@@ -1,9 +1,10 @@
 package models
 
 import (
-	log "github.com/sirupsen/logrus"
 	"server/common"
 	"sync"
+
+	log "github.com/sirupsen/logrus"
 )
 
 /*

@@ -1,3 +1,10 @@
+/**
+ * @Desc: go_server
+ * @Author: Knove
+ * @createTime: 2019/11/8 18:04
+ * @Email: knove@qq.com
+ */
+
 package main
 
 import (
@@ -27,7 +34,7 @@ func main() {
 	// INIT GORM
 	flag := common.GetInstance().Init()
 	if !flag {
-		log.Error("init database failure...")
+		log.Fatal("init database failure...")
 		os.Exit(1)
 	}
 	log.Printf("INIT Gorm ...")
