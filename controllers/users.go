@@ -1,19 +1,21 @@
 package controllers
 
 import (
-	"github.com/astaxie/beego"
+	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 )
 
 // UsersController operations for Users
 type UsersController struct {
-	beego.Controller
 }
 
 /*
 GetAllUser 获取全部用户数据
 
 */
-func (c *UsersController) GetAllUser() {
-	info := c.GetString("name")
-	beego.Info("hello", info)
+func GetAllUser(c *gin.Context) {
+
+	log.WithFields(log.Fields{
+		"animal": "walrus",
+	}).Info("A walrus appears")
 }

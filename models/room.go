@@ -1,10 +1,9 @@
 package models
 
 import (
+	log "github.com/sirupsen/logrus"
 	"server/common"
 	"sync"
-
-	"github.com/astaxie/beego"
 )
 
 /*
@@ -57,7 +56,7 @@ func (room *Room) Start() {
 
 		case conn := <-room.Exit:
 			// 离开房间事件
-			beego.Info("EventRegister 房间关闭", "用户房间名：", conn.RoomName, "真实房间名", room.Name)
+			log.Printf("EventRegister 房间关闭", "用户房间名：", conn.RoomName, "真实房间名", room.Name)
 			return
 		}
 	}
@@ -80,9 +79,9 @@ func (room *Room) EventRegister(userClient *UserClient) {
 		}
 		msgByte := DataHandle(common.OK, backData, userClient.Request)
 		room.SendAll(msgByte, client)
-		beego.Info("EventRegister 用户加入房间", client.Addr)
+		log.Printf("EventRegister 用户加入房间", client.Addr)
 	} else {
-		beego.Info("EventRegister 用户加入房间失败，没有此连接", client.Addr)
+		log.Printf("EventRegister 用户加入房间失败，没有此连接", client.Addr)
 	}
 }
 
@@ -107,7 +106,7 @@ func (room *Room) EventUnregister(client *Client) {
 
 	msgByte := DataHandle(common.OK, backData, request)
 	room.SendAll(msgByte, client)
-	beego.Info("EventUnregister 用户离开房间", client.Addr)
+	log.Printf("EventUnregister 用户离开房间", client.Addr)
 }
 
 /*
@@ -170,7 +169,7 @@ SendAll 房间内聊天广播
 
 */
 func (room *Room) SendAll(msg []byte, client *Client) {
-	beego.Info("全员广播", client.UserID, msg)
+	log.Printf("全员广播", client.UserID, msg)
 
 	clients := room.GetUserClients()
 	for _, conn := range clients {

@@ -2,29 +2,40 @@ package main
 
 import (
 	"os"
-	_ "server/routers"
-
-	"github.com/astaxie/beego"
-
 	"server/common"
 	"server/models"
+	"server/routers"
+	_ "server/routers"
+
+	"github.com/sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
 
-	beego.Info("Knove's Hacker World")
+	log.Printf("Knove's Hacker World")
+
+	// INIT LOGRUS
+
+	log.SetFormatter(&log.TextFormatter{})
+	logrus.SetOutput(os.Stdout)
+	logrus.SetLevel(logrus.DebugLevel)
 
 	// INIT WEBSOCKET
 	initSocket()
+	log.Printf("InitSocket ...")
 
 	// INIT GORM
 	flag := common.GetInstance().Init()
 	if !flag {
-		beego.Error("init database failure...")
+		log.Error("init database failure...")
 		os.Exit(1)
 	}
+	log.Printf("INIT GORM ...")
 
-	beego.Run()
+	// INIT ROUTER
+	routers.Init()
+	log.Printf("Init Router ...")
 }
 
 func initSocket() {

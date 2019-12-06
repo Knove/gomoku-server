@@ -1,7 +1,7 @@
 package common
 
 import (
-	"github.com/astaxie/beego"
+	log "github.com/sirupsen/logrus"
 
 	"github.com/jinzhu/gorm"
 	// Register some standard stuff
@@ -40,7 +40,7 @@ func (connect *Connect) Init() (issucc bool) {
 	db, errDb = gorm.Open("mysql", connConf)
 
 	if errDb != nil {
-		beego.Error(errDb)
+		log.Error(errDb)
 		return false
 	}
 	return true

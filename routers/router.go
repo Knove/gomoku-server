@@ -12,19 +12,23 @@ import (
 	"server/models"
 	"server/services"
 
-	"github.com/astaxie/beego"
+	"github.com/gin-gonic/gin"
 )
 
-func init() {
+func Init() {
+	router := gin.Default()
+
 	/* api Router */
 
 	// user
-	beego.Router("/user/getAllUser", &controllers.UsersController{}, "*:GetAllUser")
+	router.POST("/user/getAllUser", controllers.GetAllUser)
 
 	/* websocket */
 
 	// websocket Router and Register
-	beego.Router("/ws", &controllers.WebsocketController{})
+	router.GET("/ws", controllers.Websocket)
 
 	models.Register("gomoku", &services.Gomoku{})
+
+	router.Run(":7777")
 }

@@ -2,10 +2,9 @@ package models
 
 import (
 	"encoding/json"
+	log "github.com/sirupsen/logrus"
 	"reflect"
 	"server/common"
-
-	"github.com/astaxie/beego"
 )
 
 var (
@@ -22,7 +21,7 @@ func ProcessData(client *Client, message []byte) {
 
 	defer func() {
 		if r := recover(); r != nil {
-			beego.Error("处理数据 stop", r)
+			log.Error("处理数据 stop", r)
 			client.SendMsg([]byte("出现错误"))
 		}
 	}()
@@ -31,7 +30,7 @@ func ProcessData(client *Client, message []byte) {
 
 	err := json.Unmarshal(message, request)
 	if err != nil {
-		beego.Error("处理数据 json Unmarshal", err)
+		log.Error("处理数据 json Unmarshal", err)
 		client.SendMsg([]byte("数据不合法"))
 
 		return
@@ -39,7 +38,7 @@ func ProcessData(client *Client, message []byte) {
 
 	requestData, err := json.Marshal(request.Data)
 	if err != nil {
-		beego.Error("处理数据 json Marshal", err)
+		log.Error("处理数据 json Marshal", err)
 		client.SendMsg([]byte("处理数据失败"))
 
 		return
@@ -48,7 +47,7 @@ func ProcessData(client *Client, message []byte) {
 	dataMap := make(map[string]string)
 	err = json.Unmarshal(requestData, &dataMap)
 	if err != nil {
-		beego.Error("处理数据 json Marshal", err)
+		log.Error("处理数据 json Marshal", err)
 		client.SendMsg([]byte("处理数据失败"))
 		return
 	}
@@ -77,18 +76,18 @@ func ProcessData(client *Client, message []byte) {
 			data = reflectArray[1].Interface()
 		} else {
 			code = common.ParameterIllegal
-			beego.Error("路由中方法不存在", client.Addr, "infoType:", infoType)
+			log.Error("路由中方法不存在", client.Addr, "infoType:", infoType)
 		}
 	} else {
 		code = common.ParameterIllegal
-		beego.Error("路由不存在", client.Addr, "infoType:", infoType)
+		log.Error("路由不存在", client.Addr, "infoType:", infoType)
 	}
 
 	sendByte := DataHandle(code, data, request)
 
 	client.SendMsg(sendByte)
 
-	beego.Info("Response send", client.Addr, "traceID", traceID, "code", code)
+	log.Printf("Response send", client.Addr, "traceID", traceID, "code", code)
 
 	return
 }
@@ -103,7 +102,7 @@ func DataHandle(code uint64, data interface{}, request *Request) (backInfo []byt
 
 	sendByte, err := json.Marshal(response)
 	if err != nil {
-		beego.Error("处理数据 json Marshal", err)
+		log.Error("处理数据 json Marshal", err)
 
 		return
 	}

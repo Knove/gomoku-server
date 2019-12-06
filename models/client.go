@@ -3,7 +3,8 @@ package models
 import (
 	"runtime/debug"
 
-	"github.com/astaxie/beego"
+	log "github.com/sirupsen/logrus"
+
 	"github.com/gorilla/websocket"
 )
 
@@ -70,25 +71,25 @@ Read 读数据
 func (client *Client) Read() {
 	defer func() {
 		if r := recover(); r != nil {
-			beego.Info("read stop", string(debug.Stack()), r)
+			log.Printf("read stop", string(debug.Stack()), r)
 		}
 	}()
 
 	defer func() {
-		beego.Info("读取客户端数据 关闭send", client)
+		log.Printf("读取客户端数据 关闭send", client)
 		close(client.Send)
 	}()
 
 	for {
 		_, message, err := client.Socket.ReadMessage()
 		if err != nil {
-			beego.Error("读取客户端数据 错误", client.Addr, err)
+			log.Error("读取客户端数据 错误", client.Addr, err)
 
 			return
 		}
 
 		// 处理程序
-		beego.Info("读取客户端数据 处理:", string(message))
+		log.Printf("读取客户端数据 处理:", string(message))
 		ProcessData(client, message)
 	}
 }
@@ -100,7 +101,7 @@ Write 写数据
 func (client *Client) Write() {
 	defer func() {
 		if r := recover(); r != nil {
-			beego.Info("write stop", string(debug.Stack()), r)
+			log.Printf("write stop", string(debug.Stack()), r)
 
 		}
 	}()
@@ -109,7 +110,7 @@ func (client *Client) Write() {
 		ClientManagerHandler.Unregister <- client
 
 		client.Socket.Close()
-		beego.Info("Client发送数据 defer", client)
+		log.Printf("Client发送数据 defer", client)
 	}()
 
 	for {
@@ -117,7 +118,7 @@ func (client *Client) Write() {
 		case message, ok := <-client.Send:
 			if !ok {
 				// 发送数据错误 关闭连接
-				beego.Error("Client发送数据 关闭连接", client.Addr, "ok", ok)
+				log.Error("Client发送数据 关闭连接", client.Addr, "ok", ok)
 
 				return
 			}
@@ -140,7 +141,7 @@ func (client *Client) SendMsg(msg []byte) {
 
 	defer func() {
 		if r := recover(); r != nil {
-			beego.Info("SendMsg stop:", r, string(debug.Stack()))
+			log.Printf("SendMsg stop:", r, string(debug.Stack()))
 		}
 	}()
 

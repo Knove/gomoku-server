@@ -2,11 +2,10 @@ package services
 
 import (
 	"encoding/json"
+	log "github.com/sirupsen/logrus"
 	"server/common"
 	"server/models"
 	"time"
-
-	"github.com/astaxie/beego"
 )
 
 /*
@@ -23,7 +22,7 @@ Ping 测试链接
 func (gomoku *Gomoku) Ping(client *models.Client, request *models.Request, message []byte) (code uint32, data interface{}) {
 
 	code = common.OK
-	beego.Info("webSocket request ping 接口 =>", client.Addr, request.TraceID, message)
+	log.Printf("webSocket request ping 接口 =>", client.Addr, request.TraceID, message)
 
 	data = "pong"
 
@@ -41,12 +40,12 @@ func (gomoku *Gomoku) Join(client *models.Client, request *models.Request, messa
 	traceID := request.TraceID
 	userID := request.UserID
 
-	beego.Info("webSocket request Join 接口 =>", client.Addr, traceID, message)
+	log.Printf("webSocket request Join 接口 =>", client.Addr, traceID, message)
 
 	dataMap := make(map[string]string)
 	if err := json.Unmarshal(message, &dataMap); err != nil {
 		code = common.ParameterIllegal
-		beego.Error("解析数据失败", traceID, err)
+		log.Error("解析数据失败", traceID, err)
 
 		return
 	}
@@ -70,12 +69,12 @@ func (gomoku *Gomoku) Join(client *models.Client, request *models.Request, messa
 
 		userNum := len(room.Users)
 		if userNum >= 2 {
-			beego.Info("webSocket 用户加入房间 失败 人满", traceID, "userID", userID, "RoomName", roomName, "BackType", 1)
+			log.Printf("webSocket 用户加入房间 失败 人满", traceID, "userID", userID, "RoomName", roomName, "BackType", 1)
 			backData.BackType = -1
 		} else {
 			userClient.Client.RoomName = roomName
 			room.Register <- userClient
-			beego.Info("webSocket 用户加入房间", traceID, "userID", userID, "RoomName", roomName, "BackType", 1)
+			log.Printf("webSocket 用户加入房间", traceID, "userID", userID, "RoomName", roomName, "BackType", 1)
 			backData.BackType = 1
 		}
 	} else {
@@ -85,7 +84,7 @@ func (gomoku *Gomoku) Join(client *models.Client, request *models.Request, messa
 		userClient.Client.RoomName = roomName
 		room.Register <- userClient
 		models.ClientManagerHandler.AddRoom <- room
-		beego.Info("webSocket 用户创建并加入房间", traceID, "userID", userID, "RoomName", roomName, "BackType", 0)
+		log.Printf("webSocket 用户创建并加入房间", traceID, "userID", userID, "RoomName", roomName, "BackType", 0)
 		backData.BackType = 0
 	}
 
@@ -112,16 +111,16 @@ func (gomoku *Gomoku) Leave(client *models.Client, request *models.Request, mess
 
 	if userID == "" {
 		backData.BackType = -2
-		beego.Info("webSocket request Leave 接口 => 用户未登录", traceID)
+		log.Printf("webSocket request Leave 接口 => 用户未登录", traceID)
 		return
 	}
 
-	beego.Info("webSocket request Leave 接口 =>", client.Addr, traceID, message)
+	log.Printf("webSocket request Leave 接口 =>", client.Addr, traceID, message)
 
 	dataMap := make(map[string]string)
 	if err := json.Unmarshal(message, &dataMap); err != nil {
 		code = common.ParameterIllegal
-		beego.Error("解析数据失败", traceID, err)
+		log.Error("解析数据失败", traceID, err)
 
 		return
 	}
@@ -171,16 +170,16 @@ func (gomoku *Gomoku) Say(client *models.Client, request *models.Request, messag
 
 	if userID == "" {
 		backData.BackType = -2
-		beego.Info("webSocket request Say 接口 => 用户未登录", traceID)
+		log.Printf("webSocket request Say 接口 => 用户未登录", traceID)
 		return
 	}
 
-	beego.Info("webSocket request Say 接口 =>", client.Addr, traceID, message)
+	log.Printf("webSocket request Say 接口 =>", client.Addr, traceID, message)
 
 	dataMap := make(map[string]string)
 	if err := json.Unmarshal(message, &dataMap); err != nil {
 		code = common.ParameterIllegal
-		beego.Error("解析数据失败", traceID, err)
+		log.Error("解析数据失败", traceID, err)
 
 		return
 	}
