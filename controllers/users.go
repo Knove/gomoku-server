@@ -23,7 +23,7 @@ func GetAllUser(c *gin.Context) {
 
 	err := c.BindJSON(&user)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 
 	response := models.NewAPIResponse(user, "Success", http.StatusOK)

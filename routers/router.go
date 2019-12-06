@@ -8,6 +8,7 @@
 package routers
 
 import (
+	"server/common"
 	"server/controllers"
 	"server/models"
 	"server/services"
@@ -15,8 +16,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+/*
+Init 初始化路由
+
+*/
 func Init() {
 	router := gin.Default()
+	// middleware
+	router.Use(common.CORSMiddleware())
 
 	/* api Router */
 
