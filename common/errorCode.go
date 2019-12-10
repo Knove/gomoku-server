@@ -1,5 +1,6 @@
 package common
 
+// 状态码
 const (
 	OK               = 200 // Success
 	NotLoggedIn      = 700 // 未登录
@@ -8,7 +9,7 @@ const (
 	ServerError      = 750 // 系统错误
 )
 
-// 根据错误码 获取错误信息
+// GetErrorMessage 根据错误码 获取错误信息
 func GetErrorMessage(code uint64, message string) string {
 	var codeMessage string
 	codeMap := map[uint64]string{
