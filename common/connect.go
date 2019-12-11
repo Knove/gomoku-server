@@ -2,6 +2,7 @@ package common
 
 import (
 	"fmt"
+	"time"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/jinzhu/gorm"
@@ -60,6 +61,10 @@ func (connect *Connect) GetDB() (dbCon *gorm.DB) {
 	return db
 }
 
+/*
+CloseDB 关闭数据库
+
+*/
 func CloseDB() {
 	defer db.Close()
 }
@@ -68,13 +73,13 @@ func CloseDB() {
 func updateTimeStampForCreateCallback(scope *gorm.Scope) {
 	if !scope.HasError() {
 		nowTime := time.Now().Unix()
-		if createTimeField, ok := scope.FieldByName("CreatedOn"); ok {
+		if createTimeField, ok := scope.FieldByName("CreateDate"); ok {
 			if createTimeField.IsBlank {
 				createTimeField.Set(nowTime)
 			}
 		}
 
-		if modifyTimeField, ok := scope.FieldByName("ModifiedOn"); ok {
+		if modifyTimeField, ok := scope.FieldByName("UpdateDate"); ok {
 			if modifyTimeField.IsBlank {
 				modifyTimeField.Set(nowTime)
 			}
@@ -85,6 +90,6 @@ func updateTimeStampForCreateCallback(scope *gorm.Scope) {
 // updateTimeStampForUpdateCallback will set `ModifiedOn` when updating
 func updateTimeStampForUpdateCallback(scope *gorm.Scope) {
 	if _, ok := scope.Get("gorm:update_column"); !ok {
-		scope.SetColumn("ModifiedOn", time.Now().Unix())
+		scope.SetColumn("UpdateDate", time.Now().Unix())
 	}
 }

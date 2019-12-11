@@ -151,7 +151,7 @@ func (clientManager *ClientManager) buildRoom(room *Room) {
 }
 
 /*
-RemoveClient 删除一个房间
+RemoveRoom 删除一个房间
 
 */
 func (clientManager *ClientManager) RemoveRoom(room *Room) {

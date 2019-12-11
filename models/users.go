@@ -1,10 +1,14 @@
 package models
 
-type Users struct {
-	ID       string
-	Username string
-}
+/*
+Users Users
 
-func (t *Users) TableName() string {
-	return "users"
+*/
+type Users struct {
+	ID       string `json:"id"`
+	Username string `json:"username"`
+	Password string             `json:"password"`
+	Score string `json:"score"`
+	Email string `json:"email"`
+	LastLoginDate string `json:"lastLoginDate"`
 }
