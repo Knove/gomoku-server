@@ -3,6 +3,7 @@ package common
 import (
 	"fmt"
 	"time"
+
 	log "github.com/sirupsen/logrus"
 
 	"github.com/jinzhu/gorm"
@@ -44,7 +45,8 @@ func (connect *Connect) Init() (issucc bool) {
 		log.Error(errDb)
 		return false
 	}
-	
+
+	db.SingularTable(true)
 	db.Callback().Create().Replace("gorm:update_time_stamp", updateTimeStampForCreateCallback)
 	db.Callback().Update().Replace("gorm:update_time_stamp", updateTimeStampForUpdateCallback)
 	db.DB().SetMaxIdleConns(10)
@@ -57,7 +59,7 @@ func (connect *Connect) Init() (issucc bool) {
 GetDB 获取数据库实例
 
 */
-func (connect *Connect) GetDB() (dbCon *gorm.DB) {
+func GetDB() (dbCon *gorm.DB) {
 	return db
 }
 

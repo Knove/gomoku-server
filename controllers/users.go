@@ -7,6 +7,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"server/models"
+	"server/services"
 )
 
 /*
@@ -19,14 +20,18 @@ func GetAllUser(c *gin.Context) {
 		"action": "GetAllUser",
 	}).Info("GetAllUser 接口调用")
 
-	var user models.Users
+	var user models.User
 
 	err := c.BindJSON(&user)
 	if err != nil {
 		log.Error(err)
 	}
 
-	response := models.NewAPIResponse(user, "Success", http.StatusOK)
+	users, err := services.GetAll()
+	if err != nil {
+		log.Error(err)
+	}
+	response := models.NewAPIResponse(users, "Success", http.StatusOK)
 
 	c.JSON(http.StatusOK, response)
 }
