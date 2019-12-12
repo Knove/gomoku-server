@@ -49,3 +49,19 @@ func GetAllUser() ([]*UserDTO, error) {
 
 	return users, nil
 }
+
+/*
+GetUserByName GetUserByName
+
+*/
+func GetUserByName(username string) (*User, error) {
+	db := common.GetDB()
+
+	var user User
+	err := db.Where("username = ?", username).Table("users").Find(&user).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+
+	return &user, nil
+}

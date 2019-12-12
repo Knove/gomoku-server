@@ -1,6 +1,9 @@
 package common
 
 import (
+	"net/http"
+
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,6 +20,56 @@ func CORSMiddleware() gin.HandlerFunc {
 
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	}
+}
+
+/*
+JWTMiddleware JWT 中间件
+
+*/
+func JWTMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var code uint64
+		var data interface{}
+		var token string
+
+		code = OK
+		tokenArray := c.Request.Header["Token"]
+		if len(tokenArray) > 0 {
+			token = tokenArray[0]
+		}
+
+		if "/user/login" == c.FullPath() {
+			c.Next()
+			return
+		}
+
+		if token == "" {
+			code = Unauthorized
+		} else {
+			_, err := ParseToken(token)
+			if err != nil {
+				switch err.(*jwt.ValidationError).Errors {
+				case jwt.ValidationErrorExpired:
+					code = Unauthorized
+				default:
+					code = Unauthorized
+				}
+			}
+		}
+
+		if code != OK {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"code": code,
+				"msg":  GetErrorMessage(code, ""),
+				"data": data,
+			})
+
+			c.Abort()
 			return
 		}
 

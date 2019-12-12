@@ -7,17 +7,20 @@ const (
 	ParameterIllegal = 701 // 参数不合法
 	Unauthorized     = 743 // 未授权
 	ServerError      = 750 // 系统错误
+
+	UserNotFindOrPasswordIsWrong = 7701 // 用户不存在或密码错误
 )
 
 // GetErrorMessage 根据错误码 获取错误信息
 func GetErrorMessage(code uint64, message string) string {
 	var codeMessage string
 	codeMap := map[uint64]string{
-		OK:               "Success",
-		NotLoggedIn:      "未登录",
-		ParameterIllegal: "参数不合法",
-		Unauthorized:     "未授权",
-		ServerError:      "系统错误",
+		OK:                           "Success",
+		NotLoggedIn:                  "未登录",
+		ParameterIllegal:             "参数不合法",
+		Unauthorized:                 "未授权",
+		ServerError:                  "系统错误",
+		UserNotFindOrPasswordIsWrong: "用户不存在或密码错误",
 	}
 
 	if message == "" {

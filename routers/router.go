@@ -22,13 +22,6 @@ Init 初始化路由
 */
 func Init() {
 	router := gin.Default()
-	// middleware
-	router.Use(common.CORSMiddleware())
-
-	/* api Router */
-
-	// user
-	router.POST("/user/getAllUser", controllers.GetAllUser)
 
 	/* websocket */
 
@@ -36,6 +29,16 @@ func Init() {
 	router.GET("/ws", controllers.Websocket)
 
 	models.Register("gomoku", &services.Gomoku{})
+
+	// middleware
+	router.Use(common.CORSMiddleware())
+	router.Use(common.JWTMiddleware())
+
+	/* api Router */
+
+	// user
+	router.POST("/user/login", controllers.Login)           // 登录
+	router.POST("/user/getAllUser", controllers.GetAllUser) // 获取全部用户
 
 	router.Run(":7777")
 }

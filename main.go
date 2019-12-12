@@ -40,8 +40,9 @@ func main() {
 	log.Printf("INIT Gorm ...")
 
 	// INIT ROUTER
-	routers.Init()
 	log.Printf("Init Router ...")
+	routers.Init()
+
 }
 
 func initSocket() {

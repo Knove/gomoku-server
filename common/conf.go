@@ -12,10 +12,11 @@ Conf 配置文件
 
 */
 type Conf struct {
-	Host   string `yaml:"host"`
-	User   string `yaml:"user"`
-	Pwd    string `yaml:"pwd"`
-	Dbname string `yaml:"dbname"`
+	Host      string `yaml:"host"`
+	User      string `yaml:"user"`
+	Pwd       string `yaml:"pwd"`
+	Dbname    string `yaml:"dbname"`
+	JwtSecret string `yaml:"jwtsecret"`
 }
 
 /*

@@ -7,6 +7,10 @@
 
 package models
 
+import (
+	"server/common"
+)
+
 /*
 Response 通用返回数据格式
 
@@ -42,5 +46,14 @@ NewAPIResponse 创建标准接口实例
 */
 func NewAPIResponse(data interface{}, msg string, code uint64) *Data {
 	backData := Data{Code: code, Msg: msg, Data: data}
+	return &backData
+}
+
+/*
+ErrorResponse 创建错误返回接口实例
+
+*/
+func ErrorResponse(code uint64) *Data {
+	backData := Data{Code: code, Msg: common.GetErrorMessage(code, ""), Data: nil}
 	return &backData
 }
